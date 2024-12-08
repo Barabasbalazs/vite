@@ -62,7 +62,7 @@
     "prettier": "^3.3.0",
     "release-it": "^17.3.0",
     "supertest": "^6.3.4",
-    "ts-morph": "^22.0.0",
+    "ts-morph": "^24.0.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.2",
     "typescript": "~5.4.5",
