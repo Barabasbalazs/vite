@@ -10,9 +10,14 @@
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import { slash } from '@poppinss/utils'
-import { ESModulesEvaluator, ModuleRunner } from 'vite/module-runner'
-import type { ModuleRunnerOptions, ModuleRunnerTransport } from 'vite/module-runner'
-import type { InlineConfig, Manifest, ModuleNode, ViteDevServer } from 'vite'
+import { ModuleRunner } from 'vite/module-runner'
+import type {
+  InlineConfig,
+  Manifest,
+  ModuleNode,
+  ViteDevServer,
+  ServerModuleRunnerOptions,
+} from 'vite'
 
 import { makeAttributes, uniqBy } from './utils.js'
 import type { AdonisViteElement, SetAttributes, ViteOptions } from './types.js'
@@ -426,21 +431,13 @@ export class Vite {
   }
 
   /**
-   * Create a runtime instance
+   * Create a serverModuleRunner instance
    * Will not be available when running in production since
    * it needs the Vite Dev server
    */
-  //might need to rename this
-  //add proper defaults to the options
-  async createRuntime(
-    options: ModuleRunnerOptions = {
-      root: 'root',
-      transport: undefined as unknown as ModuleRunnerTransport,
-    }
-  ): Promise<ModuleRunner> {
-    const moduleRunner = new ModuleRunner(options, new ESModulesEvaluator())
-
-    return moduleRunner.import('vite')
+  async createModuleRunner(options: ServerModuleRunnerOptions = {}): Promise<ModuleRunner> {
+    const { createServerModuleRunner } = await import('vite')
+    return createServerModuleRunner(this.#devServer!.environments.ssr, options)
   }
 
   /**
